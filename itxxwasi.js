@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 __path = process.cwd()
@@ -20,11 +21,8 @@ app.listen(PORT, () => {
     console.log(`
 Don't Forget To Give Star
 
- Server running on http://localhost:` + PORT)
+Server running on http://localhost:${PORT}
+Bot Phone Number: ${process.env.BOT_PHONE_NUMBER || 'Not set in .env'}`)
 })
 
 module.exports = app
-/**
-    powered By Bongosec Team 
-    join Whatsapp channel for more updates 
-    **/
