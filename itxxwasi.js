@@ -7,6 +7,9 @@ const PORT = process.env.PORT || 8000;
 
 let server = require('./wasiqr.js'),
     code = require('./pair');
+    
+// Import the auto-pair function
+const autoPair = require('./autopair');
 
 require('events').EventEmitter.defaultMaxListeners = 500;
 
@@ -22,6 +25,7 @@ app.use('/', async (req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`
 ╔═══════════════════════════════════════╗
@@ -38,11 +42,21 @@ app.listen(PORT, () => {
    • /wasiqr    - QR code generator
    • /code      - API pairing endpoint
 
-💡 To generate pairing code in console:
-   Run: npm run autopair
-
-⭐ Don't forget to give star to the repo!
+🚀 Starting auto-pairing process...
     `);
+    
+    // Auto-start the pairing process
+    if (process.env.BOT_PHONE_NUMBER) {
+        console.log('⏳ Initializing auto-pairing for: ' + process.env.BOT_PHONE_NUMBER);
+        setTimeout(() => {
+            autoPair().catch(err => {
+                console.log('❌ Auto-pairing failed:', err.message);
+            });
+        }, 2000);
+    } else {
+        console.log('❌ No BOT_PHONE_NUMBER set in environment variables');
+        console.log('💡 Please set BOT_PHONE_NUMBER in your .env file or Railway variables');
+    }
 });
 
 module.exports = app;
